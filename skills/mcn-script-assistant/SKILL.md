@@ -68,8 +68,12 @@
 
 ### Step 5: 飞书文档写入
 **目标**：将最终脚本写入飞书文档
-**实现**：Python 脚本调用飞书开放 API
-**代码**：见 feishu-integration/
+**实现**：Python 脚本调用飞书开放 API（支持 demo/live 双模式）
+**代码**：见 feishu-integration/feishu_writer.py
+**操作指南**：见 feishu-integration/feishu_operation_guide.md
+**运行方式**：
+- Demo 模式：`python feishu_writer.py`（无需凭证，生成本地 HTML 预览）
+- Live 模式：`python feishu_writer.py --live`（需配置 .env，实际写入飞书）
 
 ---
 

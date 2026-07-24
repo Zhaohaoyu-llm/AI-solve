@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>飞书文档预览 — 短视频脚本</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f5f6f7;
+    color: #1f2329;
+    line-height: 1.8;
+  }
+  .feishu-sidebar {
+    position: fixed; left: 0; top: 0; width: 240px; height: 100vh;
+    background: #fff; border-right: 1px solid #e8e8e8;
+    padding: 16px 12px; overflow-y: auto; z-index: 100;
+  }
+  .sidebar-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; margin-bottom: 12px;
+    font-size: 14px; color: #3370ff; font-weight: 500;
+  }
+  .sidebar-item {
+    padding: 6px 12px; border-radius: 6px; cursor: pointer;
+    font-size: 13px; color: #646a73; margin-bottom: 2px;
+  }
+  .sidebar-item:hover { background: #f0f2f5; }
+  .sidebar-item.active { background: #e8f0ff; color: #3370ff; }
+  .doc-container {
+    margin-left: 240px; padding: 40px 0;
+    display: flex; justify-content: center;
+  }
+  .doc-page {
+    background: #fff; width: 820px; min-height: 100vh;
+    padding: 48px 64px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-radius: 0;
+  }
+  .doc-title {
+    font-size: 28px; font-weight: 600; color: #1f2329;
+    margin-bottom: 32px; line-height: 1.4;
+  }
+  .doc-meta {
+    display: flex; gap: 24px; margin-bottom: 24px;
+    font-size: 12px; color: #8f959e;
+  }
+  .doc-meta span { display: flex; align-items: center; gap: 4px; }
+  .doc-divider {
+    border: none; border-top: 1px solid #e8e8e8; margin: 24px 0;
+  }
+  h1 { font-size: 22px; font-weight: 600; margin: 24px 0 12px; color: #1f2329; }
+  h2 { font-size: 18px; font-weight: 600; margin: 20px 0 10px; color: #1f2329; }
+  h3 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: #1f2329; }
+  p { font-size: 14px; margin-bottom: 8px; color: #3f3f3f; }
+  table {
+    width: 100%; border-collapse: collapse; margin: 12px 0;
+    font-size: 13px;
+  }
+  th {
+    background: #f0f2f5; padding: 8px 12px; text-align: left;
+    font-weight: 500; color: #1f2329; border: 1px solid #e8e8e8;
+  }
+  td {
+    padding: 8px 12px; border: 1px solid #e8e8e8; color: #3f3f3f;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #fafafa; }
+  ul, ol { padding-left: 24px; margin-bottom: 8px; }
+  li { font-size: 14px; margin-bottom: 4px; color: #3f3f3f; }
+  strong { font-weight: 600; color: #1f2329; }
+  .check-pass { color: #00b42a; font-weight: 500; }
+  .check-warn { color: #ff9a2e; font-weight: 500; }
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 12px; font-weight: 500; margin-right: 6px;
+  }
+  .badge-blue { background: #e8f0ff; color: #3370ff; }
+  .badge-green { background: #e8ffea; color: #00b42a; }
+  .badge-orange { background: #fff3e8; color: #ff9a2e; }
+  .footer-note {
+    margin-top: 32px; padding: 12px 16px; background: #f7f8fa;
+    border-radius: 8px; font-size: 12px; color: #8f959e;
+  }
+  .demo-banner {
+    position: fixed; top: 0; right: 20px; z-index: 200;
+    background: #fff3e8; color: #ff9a2e; padding: 6px 16px;
+    border-radius: 0 0 8px 8px; font-size: 12px; font-weight: 500;
+    border: 1px solid #ff9a2e; border-top: none;
+  }
+</style>
+</head>
+<body>
+<div class="demo-banner">DEMO 模式 — 此为本地预览，实际效果以飞书文档为准</div>
+<div class="feishu-sidebar">
+  <div class="sidebar-header">
+    <span style="font-size:18px;">📄</span>
+    <span>飞书文档</span>
+  </div>
+  <div class="sidebar-item active">短视频脚本</div>
+  <div class="sidebar-item" style="color:#c0c4cc; cursor:default;">达人调研报告</div>
+  <div class="sidebar-item" style="color:#c0c4cc; cursor:default;">AI 工作流设计</div>
+  <div class="sidebar-item" style="color:#c0c4cc; cursor:default;">Skill 定义</div>
+</div>
+<div class="doc-container">
+  <div class="doc-page">
+    <div class="doc-title">【轻醒酸奶】@是Nikki呀 短视频脚本 - 20260724</div>
+    <div class="doc-meta">
+      <span>👤 飞行标准管理部</span>
+      <span>🕐 2026-07-24 21:23</span>
+      <span>✅ 已通过合规检查</span>
+    </div>
+<h1>短视频脚本 &amp; 分镜设计</h1>
+<br>
+<h2>基本信息</h2>
+<ul><li><strong>达人</strong>：@是Nikki呀</li></ul>
+<ul><li><strong>品牌</strong>：轻醒 0蔗糖高蛋白希腊酸奶</li></ul>
+<ul><li><strong>口味</strong>：蓝莓味</li></ul>
+<ul><li><strong>时长</strong>：约45秒</li></ul>
+<ul><li><strong>风格</strong>：温柔教程型，上班族快手早餐场景</li></ul>
+<br>
+<hr class="doc-divider">
+<br>
+<h2>脚本标题</h2>
+<p><strong>打工人5分钟高蛋白早餐！这个蓝莓希腊酸奶真的绝了</strong></p>
+<br>
+<hr class="doc-divider">
+<br>
+<h2>口播文案 + 分镜</h2>
+<br>
+<h3>分镜 1 · 开场钩子（0-5秒）</h3>
+<br>
+<table>
+<tr><th>项目</th><th>内容</th></tr>
+<tr><td><strong>画面</strong></td><td>俯拍，闹钟响起，一只手按掉闹钟，镜头快速切到厨房</td></tr>
+<tr><td><strong>口播</strong></td><td>姐妹们，打工人早上真的来不及做早餐啊！</td></tr>
+<tr><td><strong>字幕</strong></td><td>打工人早上有多赶？</td></tr>
+<tr><td><strong>BGM</strong></td><td>轻快节奏 Vlog BGM（从闹钟声自然过渡）</td></tr>
+</table>
+<br>
+<h3>分镜 2 · 痛点共鸣（5-12秒）</h3>
+<br>
+<table>
+<tr><th>项目</th><th>内容</th></tr>
+<tr><td><strong>画面</strong></td><td>博主半身镜头，厨房自然光，面带无奈表情</td></tr>
+<tr><td><strong>口播</strong></td><td>以前我都是随便塞两片面包就出门，到10点就饿了，一上午都没精神。</td></tr>
+<tr><td><strong>字幕</strong></td><td>随便吃 -&gt; 饿 -&gt; 没精神</td></tr>
+<tr><td><strong>BGM</strong></td><td>同上，节奏略放缓</td></tr>
+</table>
+<br>
+<h3>分镜 3 · 解决方案引入（12-20秒）</h3>
+<br>
+<table>
+<tr><th>项目</th><th>内容</th></tr>
+<tr><td><strong>画面</strong></td><td>博主走到冰箱前，打开冰箱门（冰箱内整洁摆放酸奶、水果等），取出蓝莓味酸奶</td></tr>
+<tr><td><strong>口播</strong></td><td>后来我发现了一个巨方便的搭配——一瓶这个希腊酸奶，再配点水果，5分钟搞定！</td></tr>
+<tr><td><strong>字幕</strong></td><td>5分钟高蛋白早餐</td></tr>
+<tr><td><strong>BGM</strong></td><td>节奏稍微上扬</td></tr>
+</table>
+<br>
+<h3>分镜 4 · 产品展示 + 制作过程（20-32秒）</h3>
+<br>
+<table>
+<tr><th>项目</th><th>内容</th></tr>
+<tr><td><strong>画面</strong></td><td>俯拍操作台：①打开酸奶盖，勺子舀起一勺展示质地 ②切蓝莓草莓洒在酸奶上 ③加一勺格兰诺拉麦片</td></tr>
+<tr><td><strong>口播</strong></td><td>你们看这个质地，特别醇厚！它是那种希腊酸奶，蛋白质含量很高。而且这个是0蔗糖的，早上吃不会有负担。我一般会加一点蓝莓和燕麦，口感超好。</td></tr>
+<tr><td><strong>字幕</strong></td><td>醇厚质地</td><td>高蛋白</td><td>0蔗糖</td><td>+水果+燕麦</td></tr>
+<tr><td><strong>BGM</strong></td><td>轻快背景音，口播声音为主</td></tr>
+</table>
+<br>
+<h3>分镜 5 · 使用场景 + 体验（32-40秒）</h3>
+<br>
+<table>
+<tr><th>项目</th><th>内容</th></tr>
+<tr><td><strong>画面</strong></td><td>博主坐在餐桌前吃酸奶，自然光从窗户透入，近景拍摄吃的过程，表情满足</td></tr>
+<tr><td><strong>口播</strong></td><td>这样一碗吃下去，到中午都不怎么饿。而且下午如果有点馋，再来一瓶也完全OK，当下午茶也很合适。</td></tr>
+<tr><td><strong>字幕</strong></td><td>饱腹感强</td><td>下午茶也OK</td></tr>
+<tr><td><strong>BGM</strong></td><td>轻快背景音</td></tr>
+</table>
+<br>
+<h3>分镜 6 · 结尾互动（40-45秒）</h3>
+<br>
+<table>
+<tr><th>项目</th><th>内容</th></tr>
+<tr><td><strong>画面</strong></td><td>博主对着镜头微笑，手中拿着蓝莓味酸奶（产品正面朝向镜头停留2秒）</td></tr>
+<tr><td><strong>口播</strong></td><td>有好几个口味，我最近超爱这个蓝莓的！你们早上一般都吃什么呀？评论区告诉我呗~</td></tr>
+<tr><td><strong>字幕</strong></td><td>原味/蓝莓/黄桃</td><td>评论区聊聊早餐</td></tr>
+<tr><td><strong>BGM</strong></td><td>渐弱收尾</td></tr>
+</table>
+<br>
+<hr class="doc-divider">
+<br>
+<h2>产品植入点分析</h2>
+<br>
+<table>
+<tr><th>植入节点</th><th>植入方式</th><th>自然度</th></tr>
+<tr><td>分镜 3：从冰箱取酸奶</td><td>场景自然引入，属于日常行为</td><td><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span></td></tr>
+<tr><td>分镜 4：制作过程展示</td><td>产品使用教学，信息有效传递</td><td><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span></td></tr>
+<tr><td>分镜 5：食用体验</td><td>真实感受分享，增强信任</td><td><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span></td></tr>
+<tr><td>分镜 6：结尾产品露出</td><td>品牌视觉强化</td><td><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span><span style="color:#ff9a2e;">⭐</span></td></tr>
+</table>
+<br>
+<hr class="doc-divider">
+<br>
+<h2>合规自查</h2>
+<br>
+<table>
+<tr><th>检查项</th><th>状态</th><th>说明</th></tr>
+<tr><td>减肥功效宣称</td><td><span class="check-pass">✅ PASS</span></td><td>全文无&quot;减肥&quot;&quot;瘦身&quot;&quot;减脂&quot;等词汇</td></tr>
+<tr><td>降糖功效宣称</td><td><span class="check-pass">✅ PASS</span></td><td>仅说明&quot;0蔗糖&quot;产品属性，未宣称降糖功效</td></tr>
+<tr><td>医疗暗示</td><td><span class="check-pass">✅ PASS</span></td><td>无任何医疗相关表述</td></tr>
+<tr><td>比较广告</td><td><span class="check-pass">✅ PASS</span></td><td>未提及任何竞品</td></tr>
+<tr><td>虚假夸大</td><td><span class="check-pass">✅ PASS</span></td><td>&quot;饱腹感强&quot;为真实体验描述，无夸大</td></tr>
+<tr><td>广告标识</td><td><span class="check-warn">⚠️</span> 需补充</td><td>发布时需添加&quot;合作&quot;标签</td></tr>
+<tr><td>植入自然度</td><td><span class="check-pass">✅ PASS</span></td><td>产品自然融入日常生活场景</td></tr>
+</table>
+<br>
+<hr class="doc-divider">
+<br>
+<h2>拍摄建议</h2>
+<br>
+<ol><li><strong>灯光</strong>：自然光为主，早晨拍摄效果最佳</li></ol>
+<ol><li><strong>色调</strong>：暖色调，参考博主往期滤镜风格</li></ol>
+<ol><li><strong>构图</strong>：俯拍（操作台）+ 中近景（人物）交替</li></ol>
+<ol><li><strong>道具</strong>：燕麦、蓝莓、草莓、透明玻璃碗</li></ol>
+<ol><li><strong>服装</strong>：家居休闲风，符合早起场景</li></ol>
+<ol><li><strong>产品露出</strong>：确保产品包装正面清晰可见，不要遮挡品牌名</li></ol>
+<br>
+
+    <div class="footer-note">
+      本文档由 <strong>feishu_writer.py</strong> 自动写入 | 生成时间: 2026-07-24 21:23:08 |
+      MCN Script Assistant Skill v1.0
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -24,9 +24,11 @@
 4. **最终选定**
    - 从 10 位候选人中，通过「人设×场景×表达×品牌匹配」四维评估
    - 选定 @是Nikki呀 为本次合作达人
+   - 博主主页风格示意：`references/screenshots/nikki-profile-mockup.png`
 
 ### 使用的 AI 工具
 - ChatGPT 辅助内容分析：输入达人视频文案，提取风格特征
+- AI 图片生成：生成博主主页风格示意和内容封面示意
 - 人工判断补充：AI 负责结构化提取，人工负责审美和调性判断
 
 ---
@@ -47,6 +49,12 @@
 | **镜头** | 俯拍操作台 + 中近景人物交替 | 分镜设计按此节奏编排 |
 | **语言** | 口语化、有停顿感、不念稿 | 口播文案模拟博主真实说话节奏 |
 | **色调** | 暖色调、自然光、不刻意打光 | 拍摄建议中注明 |
+
+### 内容封面参考
+
+脚本对应的内容封面风格示意：`references/screenshots/nikki-content-cover.png`
+
+展示了「打工人5分钟高蛋白早餐」场景的视觉风格：暖色调自然光、希腊酸奶+蓝莓+燕麦的早餐桌面、生活方式类内容调性。
 
 ---
 
@@ -85,24 +93,68 @@
 - 人工调整口吻和细节
 - Claude 辅助合规审核
 - Codex 辅助编写飞书接入代码
+- WorkBuddy 完善代码、生成博主图片、增强飞书操作
 
 ---
 
-## 四、AI 工具使用总结
+## 四、飞书文档接入方案
+
+### 接入方式
+
+通过 Python 脚本调用飞书开放 API，实现脚本自动写入飞书文档。**非手动复制粘贴**，符合测试题要求。
+
+### 技术实现
+
+| 组件 | 说明 |
+|------|------|
+| **MarkdownParser** | 将脚本 Markdown 文件解析为飞书文档 block 结构 |
+| **FeishuDocWriter** | 封装飞书 API 调用：创建文档、写入内容、设置权限 |
+| **HTML 预览生成器** | demo 模式下生成本地飞书文档风格预览页面 |
+
+### API 调用流程
+
+```
+1. 获取 tenant_access_token（POST /auth/v3/tenant_access_token/internal）
+2. 创建飞书文档（POST /docx/v1/documents）
+3. 获取文档根 block（GET /docx/v1/documents/{doc_id}/blocks）
+4. 批量写入内容块（POST /docx/v1/documents/{doc_id}/blocks/{root_id}/children）
+   → 自动分批（每批 ≤50 blocks），支持 3 次指数退避重试
+5. 设置文档权限为任何人可读（PATCH /drive/v1/permissions/{doc_id}/public）
+```
+
+### 支持的内容块类型
+
+- 标题（H1-H4）、普通文本（粗体/斜体）、无序/有序列表、表格、分割线
+
+### 运行方式
+
+- **Demo 模式**：`python feishu_writer.py`（无需凭证，生成本地 HTML 预览）
+- **Live 模式**：`python feishu_writer.py --live`（需配置 .env，实际写入飞书）
+
+### 飞书文档效果
+
+- 效果截图：`references/screenshots/feishu-doc-mockup.png`
+- 本地预览：`feishu-integration/feishu_doc_preview.html`
+- 完整操作指南：`feishu-integration/feishu_operation_guide.md`
+
+---
+
+## 五、AI 工具使用总结
 
 | 阶段 | 工具 | 具体用途 |
 |------|------|----------|
 | 达人调研 | ChatGPT | 内容分析、风格提取 |
+| 博主图片 | WorkBuddy (ImageGen) | 生成博主主页示意、内容封面示意、飞书文档效果截图 |
 | Brief 拆解 | Codex/Claude | 结构化信息提取 |
 | 脚本生成 | ChatGPT | 初稿生成、风格对齐 |
 | 风险审核 | Claude | 合规检查清单 |
 | Skill 设计 | Codex | 可复用 Skill 模板创建 |
-| 飞书接入 | Codex | Python 脚本编写 |
-| 报告撰写 | Codex | Markdown 文档生成 |
+| 飞书接入 | Codex + WorkBuddy | Python 脚本编写、API 修复、操作指南编写 |
+| 报告撰写 | Codex + WorkBuddy | Markdown 文档生成、内容完善 |
 
 ---
 
-## 五、可复用性说明
+## 六、可复用性说明
 
 本次产出的 `skills/mcn-script-assistant/SKILL.md` 设计为一个**通用 MCN 商单脚本生成 Skill**：
 
@@ -110,3 +162,8 @@
 - **不绑定特定达人**：更换达人信息即可生成对应风格的脚本
 - **不绑定特定平台**：脚本结构可复用到抖音/视频号（调整口径即可）
 - **流程标准化**：5 步 Pipeline 可复用到任何商单项目
+
+飞书接入模块同样可复用：
+- **MarkdownParser** 可解析任意 Markdown 文件
+- **FeishuDocWriter** 可用于任何需要写入飞书文档的场景
+- **HTML 预览生成器** 可独立使用，快速预览文档效果

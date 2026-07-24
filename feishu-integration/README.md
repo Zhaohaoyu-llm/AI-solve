@@ -2,83 +2,94 @@
 
 ## 概述
 
-本模块实现了将 MCN 商单脚本自动写入飞书文档的功能，使用飞书开放平台 API。
+本模块实现了将 MCN 商单脚本自动写入飞书文档的功能，使用飞书开放平台 API v1。
 
-## 前置准备
+## 快速开始
 
-### 1. 创建飞书应用
-
-1. 访问 [飞书开放平台](https://open.feishu.cn/)
-2. 创建企业自建应用
-3. 获取 **App ID** 和 **App Secret**
-4. 在应用权限中添加以下权限：
-   - `docx:document` - 文档读写权限
-   - `drive:drive` - 云空间访问权限
-
-### 2. 配置环境变量
-
-```bash
-# 方式一：环境变量
-export FEISHU_APP_ID="your_app_id"
-export FEISHU_APP_SECRET="your_app_secret"
-export FEISHU_FOLDER_TOKEN="your_folder_token"  # 可选
-
-# 方式二：创建 .env 文件
-cp .env.example .env
-# 编辑 .env 文件填入凭证
-```
-
-### 3. 安装依赖
-
-```bash
-pip install requests
-```
-
-## 使用方法
-
-### 命令行运行
+### Demo 模式（无需凭证）
 
 ```bash
 cd feishu-integration
 python feishu_writer.py
 ```
 
-### Python 代码集成
+运行后生成 `feishu_doc_preview.html`，用浏览器打开即可查看飞书文档效果预览。
 
-```python
-from feishu_writer import FeishuDocWriter, build_script_blocks
+### Live 模式（实际写入飞书）
 
-# 初始化
-writer = FeishuDocWriter(app_id="xxx", app_secret="xxx")
+```bash
+# 1. 配置凭证
+cp .env.example .env
+# 编辑 .env 填入飞书 App ID 和 App Secret
 
-# 创建文档
-doc_id = writer.create_doc(title="脚本标题", folder_token="可选")
+# 2. 安装依赖
+pip install requests
 
-# 写入内容
-blocks = build_script_blocks(script_data)
-writer.write_content(doc_id, blocks)
-
-print(f"文档链接: https://bytedance.feishu.cn/docx/{doc_id}")
+# 3. 运行写入脚本
+python feishu_writer.py --live
 ```
 
-## API 流程说明
+## 文件说明
+
+| 文件 | 说明 |
+|------|------|
+| `feishu_writer.py` | 主脚本：Markdown 解析 + 飞书 API 调用 + HTML 预览生成 |
+| `feishu_operation_guide.md` | **完整操作指南**（应用创建、权限配置、FAQ） |
+| `feishu_doc_preview.html` | demo 模式生成的飞书文档效果预览页面 |
+| `.env.example` | 环境变量模板 |
+| `.env` | 实际凭证文件（已 gitignore） |
+
+## API 流程
 
 ```
 1. 获取 tenant_access_token
    POST /auth/v3/tenant_access_token/internal
+   → token 有效期 2 小时，自动管理刷新
 
 2. 创建飞书文档
    POST /docx/v1/documents
+   → 返回 document_id
 
-3. 批量写入内容块
-   POST /docx/v1/documents/{document_id}/blocks/batch_create
+3. 获取文档根 block
+   GET /docx/v1/documents/{document_id}/blocks
+   → 返回根 block_id
 
-4. 获取文档链接
-   格式: https://bytedance.feishu.cn/docx/{document_id}
+4. 批量写入内容块
+   POST /docx/v1/documents/{document_id}/blocks/{block_id}/children
+   → 自动分批（每批 ≤50 blocks），支持重试
+
+5. 设置文档权限
+   PATCH /drive/v1/permissions/{document_id}/public
+   → 设置为任何人可读
+
+6. 输出飞书文档链接
+   https://bytedance.feishu.cn/docx/{document_id}
 ```
+
+## 支持的内容块类型
+
+| Markdown 元素 | 飞书 Block 类型 |
+|---------------|----------------|
+| `# H1` ~ `#### H4` | heading1 ~ heading4 |
+| 普通段落 | text（支持粗体、斜体） |
+| `- 无序列表` | bullet |
+| `1. 有序列表` | ordered |
+| `\| 表格 \|` | table（自动行列数） |
+| `---` | divider |
+
+## 效果预览
+
+飞书文档效果截图见 `references/screenshots/feishu-doc-mockup.png`。
+
+本地 HTML 预览：运行 demo 模式后打开 `feishu_doc_preview.html`。
+
+## 详细指南
+
+完整的飞书应用创建、权限配置、FAQ 请阅读 **[feishu_operation_guide.md](feishu_operation_guide.md)**。
 
 ## 注意事项
 
-- tenant_access_token 有效期 2 小时，需定期刷新
+- tenant_access_token 有效期 2 小时，脚本自动管理过期刷新
 - 确保飞书应用已发布并管理员审核通过
-- 内容块写入 API 单次最多支持 50 个块
+- 内容块写入 API 单次最多支持 50 个块，脚本自动分批
+- `FEISHU_FOLDER_TOKEN` 为可选参数，不填则文档创建在应用根目录

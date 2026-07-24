@@ -12,21 +12,27 @@
 
 ```
 AI-solve/
-├── README.md                          # 项目说明（本文件）
-├── report.md                          # 最终交付报告
+├── README.md                              # 项目说明（本文件）
+├── report.md                              # 最终交付报告
 ├── references/
-│   └── blogger-research.md            # 10位达人调研 + 最终选定分析
+│   ├── blogger-research.md                # 10位达人调研 + 最终选定分析
+│   └── screenshots/                       # 博主图片素材
+│       ├── nikki-profile-mockup.png       # @是Nikki呀 主页风格示意
+│       ├── nikki-content-cover.png        # 脚本内容封面风格示意
+│       └── feishu-doc-mockup.png          # 飞书文档效果截图
 ├── skills/
 │   └── mcn-script-assistant/
-│       └── SKILL.md                   # 可复用 Skill 定义
+│       └── SKILL.md                       # 可复用 Skill 定义
 ├── workflow/
-│   └── prompts.md                     # 5步工作流 + 全部核心 Prompt
+│   └── prompts.md                         # 5步工作流 + 全部核心 Prompt
 ├── script/
-│   └── script-storyboard.md           # 最终脚本 + 分镜设计
+│   └── script-storyboard.md               # 最终脚本 + 分镜设计
 └── feishu-integration/
-    ├── feishu_writer.py               # 飞书文档自动写入脚本
-    ├── README.md                      # 飞书接入详细说明
-    └── .env.example                   # 环境变量模板
+    ├── feishu_writer.py                   # 飞书文档自动写入脚本（含 Markdown 解析）
+    ├── feishu_operation_guide.md          # 飞书操作完整指南（应用创建→运行→FAQ）
+    ├── feishu_doc_preview.html            # 飞书文档效果预览（demo 模式生成）
+    ├── README.md                          # 飞书接入说明
+    └── .env.example                       # 环境变量模板
 ```
 
 ---
@@ -36,7 +42,8 @@ AI-solve/
 | 工具 | 用途 |
 |------|------|
 | **ChatGPT / Claude** | Prompt 执行：Brief 拆解、达人风格分析、脚本生成、合规审核 |
-| **Codex (OpenAI)** | Skill 设计、工作流编排、Python 代码生成 |
+| **Codex (OpenAI)** | Skill 设计、工作流编排、Python 代码生成（第一版） |
+| **WorkBuddy** | 代码完善、博主图片生成、飞书操作增强、文档打磨 |
 | **飞书开放 API** | 文档自动创建与写入（`docx/v1/documents`） |
 
 ---
@@ -48,27 +55,40 @@ AI-solve/
 所有 Prompt 位于 `workflow/prompts.md`，按以下顺序执行：
 
 ```
-Step 1: Brief 拆解 → Step 2: 风格模仿 → Step 3: 脚本生成 → Step 4: 风险质检
+Step 1: Brief 拆解 → Step 2: 风格模仿 → Step 3: 脚本生成 → Step 4: 风险质检 → Step 5: 写入飞书
 ```
 
 将 Prompt 依次输入 AI 对话工具，每一步的输出作为下一步的输入。
 
 ### 2. 飞书文档自动写入
 
+#### Demo 模式（无需凭证，生成本地预览）
+
+```bash
+cd feishu-integration
+python feishu_writer.py
+```
+
+运行后打开 `feishu_doc_preview.html` 查看飞书文档效果。
+
+#### Live 模式（实际写入飞书文档）
+
 ```bash
 # 1. 配置凭证
 cp feishu-integration/.env.example feishu-integration/.env
-# 编辑 .env 填入你的飞书 App ID 和 App Secret
+# 编辑 .env 填入飞书 App ID 和 App Secret
 
 # 2. 安装依赖
 pip install requests
 
 # 3. 运行写入脚本
 cd feishu-integration
-python feishu_writer.py
+python feishu_writer.py --live
 ```
 
-详细说明见 `feishu-integration/README.md`。
+运行成功后输出飞书文档链接，文档权限自动设置为任何人可读。
+
+> 📖 完整的飞书应用创建、权限配置、FAQ 请阅读 **[feishu-integration/feishu_operation_guide.md](feishu-integration/feishu_operation_guide.md)**
 
 ---
 
@@ -79,6 +99,9 @@ python feishu_writer.py
 - **调研范围**：小红书平台
 - **调研数量**：10 位候选人 → 最终选定 1 位（@是Nikki呀）
 - **调研维度**：粉丝量、内容方向、粉丝画像、代表作品、匹配理由
+- **博主图片**：包含主页风格示意图和内容封面示意图
+  - ![@是Nikki呀 主页](references/screenshots/nikki-profile-mockup.png)
+  - ![内容封面](references/screenshots/nikki-content-cover.png)
 - **最终选定理由**：在「人设」「内容场景」「表达方式」「品牌匹配度」四个维度均为最优
 - **文件**：`references/blogger-research.md`
 
@@ -99,14 +122,16 @@ python feishu_writer.py
 
 ### D. 飞书文档接入
 
-- **实现方式**：Python 脚本调用飞书开放 API
-- **API 链路**：获取 token → 创建文档 → 批量写入内容块
-- **文件**：`feishu-integration/feishu_writer.py`
+- **实现方式**：Python 脚本调用飞书开放 API（非手动复制粘贴）
+- **API 链路**：获取 token → 创建文档 → 获取根 block → 批量写入内容块 → 设置权限
+- **代码**：`feishu-integration/feishu_writer.py`（含 Markdown 解析器、飞书 API 封装、HTML 预览生成器）
+- **操作指南**：`feishu-integration/feishu_operation_guide.md`（从应用创建到运行的完整流程）
+- **效果预览**：`feishu-integration/feishu_doc_preview.html`（demo 模式生成的飞书文档风格预览）
+- **飞书文档效果截图**：![](references/screenshots/feishu-doc-mockup.png)
 - **文档标题**：`【轻醒酸奶】@是Nikki呀 短视频脚本 - 20260724`
 
-> 📎 飞书文档链接：运行 `feishu_writer.py` 后自动输出，请将链接填入此处并确保已开权限。
->
-> **飞书文档链接**：[待运行后填写]
+> 📎 **飞书文档链接**：配置 API 凭证后运行 `python feishu_writer.py --live` 自动生成。
+> Demo 模式可查看 `feishu_doc_preview.html` 预览效果。
 
 ---
 
@@ -124,6 +149,12 @@ python feishu_writer.py
 - 蓝莓是「抗氧化」「健康」的视觉符号，在镜头下色彩表现力强
 - 蓝莓口味在女性用户中偏好度高于原味
 - 蓝莓+酸奶的搭配在小红书已有大量 UGC 心智基础
+
+### 飞书接入为什么用 API 而非手动？
+
+- 测试题明确要求「仅手动复制粘贴不作为完整接入方案」
+- API 方式支持批量处理、CI/CD 集成、自动化流水线
+- Markdown 解析器可复用到任何脚本文件的飞书写入
 
 ---
 
