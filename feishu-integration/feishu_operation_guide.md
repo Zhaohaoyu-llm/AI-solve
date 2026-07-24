@@ -245,7 +245,7 @@ open feishu_doc_preview.html
 
 ### 5.3 效果截图
 
-飞书文档效果截图见 `references/screenshots/feishu-doc-mockup.png`。
+飞书文档效果可通过 `feishu_doc_preview.html` 本地预览。
 
 ---
 

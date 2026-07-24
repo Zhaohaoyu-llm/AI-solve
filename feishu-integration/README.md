@@ -79,7 +79,7 @@ python feishu_writer.py --live
 
 ## 效果预览
 
-飞书文档效果截图见 `references/screenshots/feishu-doc-mockup.png`。
+飞书文档效果可通过 `feishu_doc_preview.html` 本地预览。
 
 本地 HTML 预览：运行 demo 模式后打开 `feishu_doc_preview.html`。
 

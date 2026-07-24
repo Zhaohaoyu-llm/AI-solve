@@ -24,11 +24,10 @@
 4. **最终选定**
    - 从 10 位候选人中，通过「人设×场景×表达×品牌匹配」四维评估
    - 选定 @是Nikki呀 为本次合作达人
-   - 博主主页风格示意：`references/screenshots/nikki-profile-mockup.png`
+   - 博主主页：小红书搜索「是Nikki呀」查看真实主页
 
 ### 使用的 AI 工具
 - ChatGPT 辅助内容分析：输入达人视频文案，提取风格特征
-- AI 图片生成：生成博主主页风格示意和内容封面示意
 - 人工判断补充：AI 负责结构化提取，人工负责审美和调性判断
 
 ---
@@ -52,9 +51,7 @@
 
 ### 内容封面参考
 
-脚本对应的内容封面风格示意：`references/screenshots/nikki-content-cover.png`
-
-展示了「打工人5分钟高蛋白早餐」场景的视觉风格：暖色调自然光、希腊酸奶+蓝莓+燕麦的早餐桌面、生活方式类内容调性。
+脚本对应的封面场景：「打工人5分钟高蛋白早餐」——暖色调自然光、希腊酸奶+蓝莓+燕麦的早餐桌面、生活方式类内容调性。请参考 @是Nikki呀 主页同类内容封面风格。
 
 ---
 
@@ -93,7 +90,7 @@
 - 人工调整口吻和细节
 - Claude 辅助合规审核
 - Codex 辅助编写飞书接入代码
-- WorkBuddy 完善代码、生成博主图片、增强飞书操作
+- WorkBuddy 完善代码、增强飞书操作
 
 ---
 
@@ -133,7 +130,6 @@
 
 ### 飞书文档效果
 
-- 效果截图：`references/screenshots/feishu-doc-mockup.png`
 - 本地预览：`feishu-integration/feishu_doc_preview.html`
 - 完整操作指南：`feishu-integration/feishu_operation_guide.md`
 
@@ -144,7 +140,6 @@
 | 阶段 | 工具 | 具体用途 |
 |------|------|----------|
 | 达人调研 | ChatGPT | 内容分析、风格提取 |
-| 博主图片 | WorkBuddy (ImageGen) | 生成博主主页示意、内容封面示意、飞书文档效果截图 |
 | Brief 拆解 | Codex/Claude | 结构化信息提取 |
 | 脚本生成 | ChatGPT | 初稿生成、风格对齐 |
 | 风险审核 | Claude | 合规检查清单 |

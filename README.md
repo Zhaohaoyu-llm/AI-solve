@@ -15,11 +15,7 @@ AI-solve/
 ├── README.md                              # 项目说明（本文件）
 ├── report.md                              # 最终交付报告
 ├── references/
-│   ├── blogger-research.md                # 10位达人调研 + 最终选定分析
-│   └── screenshots/                       # 博主图片素材
-│       ├── nikki-profile-mockup.png       # @是Nikki呀 主页风格示意
-│       ├── nikki-content-cover.png        # 脚本内容封面风格示意
-│       └── feishu-doc-mockup.png          # 飞书文档效果截图
+│   └── blogger-research.md                # 10位达人调研 + 最终选定分析
 ├── skills/
 │   └── mcn-script-assistant/
 │       └── SKILL.md                       # 可复用 Skill 定义
@@ -43,7 +39,7 @@ AI-solve/
 |------|------|
 | **ChatGPT / Claude** | Prompt 执行：Brief 拆解、达人风格分析、脚本生成、合规审核 |
 | **Codex (OpenAI)** | Skill 设计、工作流编排、Python 代码生成（第一版） |
-| **WorkBuddy** | 代码完善、博主图片生成、飞书操作增强、文档打磨 |
+| **WorkBuddy** | 代码完善、飞书操作增强、文档打磨 |
 | **飞书开放 API** | 文档自动创建与写入（`docx/v1/documents`） |
 
 ---
@@ -99,9 +95,7 @@ python feishu_writer.py --live
 - **调研范围**：小红书平台
 - **调研数量**：10 位候选人 → 最终选定 1 位（@是Nikki呀）
 - **调研维度**：粉丝量、内容方向、粉丝画像、代表作品、匹配理由
-- **博主图片**：包含主页风格示意图和内容封面示意图
-  - ![@是Nikki呀 主页](references/screenshots/nikki-profile-mockup.png)
-  - ![内容封面](references/screenshots/nikki-content-cover.png)
+- **博主图片**：请在小红书搜索「是Nikki呀」查看真实主页和内容
 - **最终选定理由**：在「人设」「内容场景」「表达方式」「品牌匹配度」四个维度均为最优
 - **文件**：`references/blogger-research.md`
 
@@ -127,7 +121,6 @@ python feishu_writer.py --live
 - **代码**：`feishu-integration/feishu_writer.py`（含 Markdown 解析器、飞书 API 封装、HTML 预览生成器）
 - **操作指南**：`feishu-integration/feishu_operation_guide.md`（从应用创建到运行的完整流程）
 - **效果预览**：`feishu-integration/feishu_doc_preview.html`（demo 模式生成的飞书文档风格预览）
-- **飞书文档效果截图**：![](references/screenshots/feishu-doc-mockup.png)
 - **文档标题**：`【轻醒酸奶】@是Nikki呀 短视频脚本 - 20260724`
 
 > 📎 **飞书文档链接**：配置 API 凭证后运行 `python feishu_writer.py --live` 自动生成。
